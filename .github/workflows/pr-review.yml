@@ -1,0 +1,17 @@
+name: AI PR Review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hongjunshen142-lab/mohongyin-gh-bot@main
+        with:
+          openrouter_key: ${{ secrets.OPENROUTER_KEY }}
+          review_prs: 'true'
+          language: 'zh'
