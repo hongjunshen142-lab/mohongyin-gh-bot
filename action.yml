@@ -1,0 +1,41 @@
+name: '墨鸿隐 AI 助手'
+description: 'AI驱动的GitHub自动化：PR智能审查、Issue自动分类'
+author: '墨鸿隐 (Mohongyin)'
+branding:
+  icon: 'zap'
+  color: 'purple'
+inputs:
+  openrouter_key:
+    description: 'OpenRouter API Key'
+    required: true
+  review_prs:
+    description: '自动审查PR'
+    default: 'true'
+  respond_issues:
+    description: '自动响应Issue'
+    default: 'true'
+  language:
+    description: '响应语言'
+    default: 'zh'
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - run: pip install requests
+      shell: bash
+    - if: github.event_name == 'pull_request' && inputs.review_prs == 'true'
+      run: python ${{ github.action_path }}/scripts/review_pr.py
+      shell: bash
+      env:
+        OPENROUTER_KEY: ${{ inputs.openrouter_key }}
+        GITHUB_TOKEN: ${{ github.token }}
+        LANGUAGE: ${{ inputs.language }}
+    - if: github.event_name == 'issues' && inputs.respond_issues == 'true'
+      run: python ${{ github.action_path }}/scripts/respond_issue.py
+      shell: bash
+      env:
+        OPENROUTER_KEY: ${{ inputs.openrouter_key }}
+        GITHUB_TOKEN: ${{ github.token }}
+        LANGUAGE: ${{ inputs.language }}
