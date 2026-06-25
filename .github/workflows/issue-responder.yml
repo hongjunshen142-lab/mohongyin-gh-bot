@@ -1,0 +1,16 @@
+name: AI Issue Responder
+on:
+  issues:
+    types: [opened]
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hongjunshen142-lab/mohongyin-gh-bot@main
+        with:
+          openrouter_key: ${{ secrets.OPENROUTER_KEY }}
+          respond_issues: 'true'
+          language: 'zh'
